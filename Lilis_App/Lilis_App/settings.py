@@ -37,7 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'widget_tweaks',
+    'dispositivos',
+    'accounts', #Se agrego las nuevas app
+    "organizations",
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media' 
+
+LOGIN_URL = "login"
+# A dónde redirigir después de un login exitoso (si no viene ?next=…)
+LOGIN_REDIRECT_URL = "dashboard"   # cámbialo por la ruta que tengas
+LOGOUT_REDIRECT_URL = "login"      # opcional: a dónde ir tras logout
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
