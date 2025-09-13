@@ -6,14 +6,34 @@ from django.db import models
 # Create your models here.
 
 class BaseModel(models.Model):
-    STATUS_CHOICES = [("ACTIVE", "Active"), 
-                      ("INACTIVE", "Inactive")]
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES,default="ACTIVE")
-    created_at = models.DateTimeField(auto_add_now=True, help_text="Fecha/hora de creación")
-    updated_at = models.DateTimeField(auto_now=True, help_text="Fecha/hora de la última actualización")
-    deleted_at = models.DateTimeField(null=True, help_text="Marca de borrado lógico.",blank=True)
+    STATES = [
+        ("ACTIVE", "Active"),
+        ("INACTIVE", "Inactive"),
+    ]
+
+    state = models.CharField(max_length=10, choices=STATES, default="ACTIVE")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
     class Meta:
         abstract = True
 
+class Rol(BaseModel):
+    nombre = models.CharField(max_length=50, unique=True)
+    descripcion = models.CharField(max_length=255)
 
-   
+    def __str__(self):
+        return self.nombre
+
+
+class Usuario(BaseModel):
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+    nombre = models.CharField(max_length=255)
+    rol = models.ForeignKey(Rol, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+
