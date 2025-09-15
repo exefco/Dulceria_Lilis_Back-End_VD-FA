@@ -14,7 +14,10 @@
         <a class="navbar-brand" href="#">Dulcería Lili's</a>
         <div class="d-flex">
             <span class="navbar-text me-3">Bienvenido, {{ usuario.nombre }}</span>
-            <a href="{% url 'login' %}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+            <form action="{% url 'logout' %}" method="post" class="d-inline">
+                {% csrf_token %}
+                    <button type="submit" class="btn btn-link nav-link text-white text-center align-items-center">Salir</button>
+            </form>
         </div>
     </div>
 </nav>

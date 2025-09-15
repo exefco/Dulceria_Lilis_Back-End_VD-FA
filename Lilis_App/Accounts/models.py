@@ -1,9 +1,6 @@
 from django.db import models
+from Organizations.models import Organization
 
-# Create your models here.
-from django.db import models
-
-# Create your models here.
 
 class BaseModel(models.Model):
     STATES = [
@@ -32,6 +29,7 @@ class Usuario(BaseModel):
     password = models.CharField(max_length=255)
     nombre = models.CharField(max_length=255)
     rol = models.ForeignKey(Rol, on_delete=models.CASCADE, null=True, blank=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.nombre
