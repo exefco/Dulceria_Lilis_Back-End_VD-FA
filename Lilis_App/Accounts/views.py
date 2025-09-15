@@ -23,7 +23,7 @@ class Login(View):
         return render(request, self.template_name)
 
     def post(self, request):        
-        next_url = request.POST.get('next')
+        next_url = request.POST.get('next') or request.GET.get('next')
         email = request.POST.get('email')
         password = request.POST.get('password')
 
@@ -40,6 +40,37 @@ class Login(View):
 
         return render(request, self.template_name, {"error": "Email o contraseña incorrectos."})
     
+class Password_reset(View):
+    template_name = 'accounts/password_reset.html'
+
+    def get(self,request):
+        usuario_id = request.session.get('usuario_id')
+        if not usuario_id:
+            return redirect('/login/?next=/password_reset/')
+        return render(request, self.template_name)
+
+    def post(self,request):
+        usuario_id = request.session.get('usuario_id')
+        if not usuario_id:
+            return redirect('/login/?next=/password_reset/')
+        actual_password = request.POST.get('actual_password')
+        nueva_password = request.POST.get('new_password')
+        nueva_password2 = request.POST.get('new_password2')
+        try:
+            usuario = Usuario.objects.get(id=usuario_id)
+        except Usuario.DoesNotExist:
+            return redirect('/login/')
+        if not bcrypt.checkpw(actual_password.encode('utf-8'), usuario.password.encode('utf-8')):
+            return redirect('/password_reset/')
+        if nueva_password != nueva_password2:
+            return redirect('/password_reset/')
+        usuario.password = bcrypt.hashpw(nueva_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        usuario.save()
+        return redirect('products_dashboard')
+
+
+    
+
 def Logout(request):
     request.session.flush()
     return redirect("login")
